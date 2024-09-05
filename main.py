@@ -9,7 +9,6 @@ import logging
 from pystray import MenuItem as item
 from PIL import Image, ImageDraw
 import win32api
-import win32com.client
 
 URL = "https://a.dove.isdumb.one/list.txt"
 HOSTS_PATH = r"C:\Windows\System32\drivers\etc\hosts"
@@ -60,18 +59,6 @@ def run_periodically():
         check_and_update_hosts()
         time.sleep(CHECK_INTERVAL)
 
-def add_to_startup():
-    script_path = os.path.realpath(sys.argv[0])
-    startup_path = os.path.join(os.getenv("APPDATA"), r"Microsoft\Windows\Start Menu\Programs\Startup", "hosts_updater.lnk")
-
-    if not os.path.exists(startup_path):
-        shell = win32com.client.Dispatch("WScript.Shell")
-        shortcut = shell.CreateShortCut(startup_path)
-        shortcut.TargetPath = script_path
-        shortcut.WorkingDirectory = os.path.dirname(script_path)
-        shortcut.Save()
-        logging.info("Added to startup.")
-
 def create_image():
     width = 64
     height = 64
@@ -91,8 +78,6 @@ def setup_tray_icon():
     icon.run()
 
 if __name__ == "__main__":
-    add_to_startup()
-
     tray_thread = threading.Thread(target=setup_tray_icon)
     tray_thread.daemon = True
     tray_thread.start()
