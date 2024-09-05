@@ -9,7 +9,7 @@ This tool is ideal for users looking to automate the management of their hosts f
 
 ## Dependencies
 
-- Python libraries: requests
+- Python libraries: `requests`
 
 ## Installation
 
@@ -34,4 +34,4 @@ The script can be configured using the `config.json` file. This file contains th
 
 ## Contributions
 
-Contributions are welcome! For feature requests, bug reports or submitting pull requests, please use the [issue tracker](
+Contributions are welcome! For feature requests, bug reports or submitting pull requests, please use the issue tracker
