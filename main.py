@@ -31,24 +31,37 @@ def append_to_hosts(missing_lines):
         with open(HOSTS_PATH, 'a') as file:
             for line in missing_lines:
                 file.write(f"{line}\n")
-        logging.info("Missing lines appended to hosts file.")
+        logging.info(f"{len(missing_lines)} lines appended to hosts file.")
+        return len(missing_lines)
     except IOError as e:
         logging.error(f"Error writing to hosts file: {e}")
+        return 0
 
 def check_and_update_hosts():
     remote_data = fetch_remote_data()
     if not remote_data:
-        return
+        return 0, 0
 
     local_data = read_hosts_file()
     missing_lines = [line for line in remote_data if line and line not in local_data]
+    removed_lines = [line for line in local_data if line and line not in remote_data]
 
+    added_count = 0
     if missing_lines:
-        append_to_hosts(missing_lines)
+        added_count = append_to_hosts(missing_lines)
+        logging.info(f"{added_count} lines added to hosts file.")
+    else:
+        logging.info("No updates found")
+
+    if removed_lines:
+        logging.info(f"{len(removed_lines)} lines removed from hosts file.")
+
+    return added_count, len(removed_lines)
 
 def run_once():
-    check_and_update_hosts()
-    print("Update is finished. Press any key to exit.")
+    added_count, removed_count = check_and_update_hosts()
+    print("========================================")
+    print(f"Update is finished.\n{added_count} lines added.\n{removed_count} lines removed.\nPress any key to exit.")
     input()
 
 if __name__ == "__main__":
