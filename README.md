@@ -4,9 +4,7 @@ This repository contains a Python script designed to automatically update the ho
 ## Key Features
 
 - Automated Fetching: Retrieves the latest hosts list from a configurable remote URL.
-- Scheduled Updates: Runs at regular intervals, with the ability to customize the frequency.
 - Logging: Detailed logs are maintained to track update history and any errors encountered during execution.
-- System Tray Integration: The script integrates with the system tray, offering easy access and management through an icon.
 
 ## Dependencies
 
