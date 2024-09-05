@@ -1,4 +1,1 @@
-pystray~=0.19.5
 requests~=2.32.3
-pywin32~=306
-pillow~=10.4.0
