@@ -1,18 +1,9 @@
-import os
-import sys
-
-import pystray
-import requests
-import threading
-import time
 import logging
-from pystray import MenuItem as item
-from PIL import Image, ImageDraw
-import win32api
+
+import requests
 
 URL = "https://a.dove.isdumb.one/list.txt"
 HOSTS_PATH = r"C:\Windows\System32\drivers\etc\hosts"
-CHECK_INTERVAL = 3600  # 1 hour in seconds
 
 logging.basicConfig(filename='hosts_updater.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
@@ -29,7 +20,8 @@ def fetch_remote_data():
 def read_hosts_file():
     try:
         with open(HOSTS_PATH, 'r', encoding='utf-8') as file:
-            return file.read().splitlines()
+            lines =  file.read().splitlines()
+            return lines[30:]  # Return lines starting from line 31
     except IOError as e:
         logging.error(f"Error reading hosts file: {e}")
         return []
@@ -54,32 +46,10 @@ def check_and_update_hosts():
     if missing_lines:
         append_to_hosts(missing_lines)
 
-def run_periodically():
-    while True:
-        check_and_update_hosts()
-        time.sleep(CHECK_INTERVAL)
-
-def create_image():
-    width = 64
-    height = 64
-    image = Image.new('RGB', (width, height), (255, 255, 255))
-    draw = ImageDraw.Draw(image)
-    draw.rectangle((width // 4, height // 4, width * 3 // 4, height * 3 // 4), fill="black")
-    return image
-
-def on_quit(icon):
-    icon.stop()
-    win32api.PostQuitMessage(0)
-
-def setup_tray_icon():
-    icon = pystray.Icon("hosts_updater", create_image(), "Hosts Updater", menu=pystray.Menu(
-        item('Quit', on_quit)
-    ))
-    icon.run()
+def run_once():
+    check_and_update_hosts()
+    print("Update is finished. Press any key to exit.")
+    input()
 
 if __name__ == "__main__":
-    tray_thread = threading.Thread(target=setup_tray_icon)
-    tray_thread.daemon = True
-    tray_thread.start()
-
-    run_periodically()
+    run_once()
