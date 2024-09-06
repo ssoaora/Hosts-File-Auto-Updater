@@ -15,7 +15,7 @@ This tool is ideal for users looking to automate the management of their hosts f
 
 1. Clone the repository to your local machine.
 2. Install the required dependencies using `pip install -r requirements.txt`.
-3. Run the script using `python hosts_updater.py`.
+3. Run the script using `update.bat` or type `python hosts_updater.py` on terminal (Note: Administrator privileges are required).
 
 ## Configuration
 
