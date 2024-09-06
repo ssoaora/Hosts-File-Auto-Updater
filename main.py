@@ -1,6 +1,6 @@
 import logging
-
 import requests
+import difflib
 
 URL = "https://a.dove.isdumb.one/list.txt"
 HOSTS_PATH = r"C:\Windows\System32\drivers\etc\hosts"
@@ -20,49 +20,50 @@ def fetch_remote_data():
 def read_hosts_file():
     try:
         with open(HOSTS_PATH, 'r', encoding='utf-8') as file:
-            lines =  file.read().splitlines()
+            lines = file.read().splitlines()
             return lines[30:]  # Return lines starting from line 31
     except IOError as e:
         logging.error(f"Error reading hosts file: {e}")
         return []
 
-def append_to_hosts(missing_lines):
+def update_hosts_file(new_lines):
     try:
-        with open(HOSTS_PATH, 'a') as file:
-            for line in missing_lines:
-                file.write(f"{line}\n")
-        logging.info(f"{len(missing_lines)} lines appended to hosts file.")
-        return len(missing_lines)
+        with open(HOSTS_PATH, 'r+', encoding='utf-8') as file:
+            lines = file.read().splitlines()
+            original_lines = lines[:30]  # Keep the first 30 lines unchanged
+            updated_lines = original_lines + new_lines
+            file.seek(0)
+            file.write('\n'.join(updated_lines) + '\n')
+            file.truncate()
     except IOError as e:
-        logging.error(f"Error writing to hosts file: {e}")
-        return 0
+        logging.error(f"Error updating hosts file: {e}")
 
-def check_and_update_hosts():
+def main():
     remote_data = fetch_remote_data()
-    if not remote_data:
-        return 0, 0
-
     local_data = read_hosts_file()
-    missing_lines = [line for line in remote_data if line and line not in local_data]
-    removed_lines = [line for line in local_data if line and line not in remote_data]
 
-    added_count = 0
-    if missing_lines:
-        added_count = append_to_hosts(missing_lines)
-        logging.info(f"{added_count} lines added to hosts file.")
+    if not remote_data:
+        logging.info("No remote data fetched. Exiting.")
+        print("No remote data fetched. Exiting.")
+        return
+
+    diff = list(difflib.unified_diff(local_data, remote_data, lineterm=''))
+    added_lines = sum(1 for line in diff if line.startswith('+') and not line.startswith('+++'))
+    removed_lines = sum(1 for line in diff if line.startswith('-') and not line.startswith('---'))
+    modified_lines = added_lines + removed_lines
+
+    if diff:
+        logging.info("Differences found. Updating hosts file.")
+        logging.info(f"Added lines: {added_lines}, Removed lines: {removed_lines}, Modified lines: {modified_lines}")
+        update_hosts_file(remote_data)
+        print(f"Differences found. Updating hosts file.")
+        print(f"Added lines: {added_lines}, Removed lines: {removed_lines}, Modified lines: {modified_lines}")
     else:
-        logging.info("No updates found")
+        logging.info("No differences found. Hosts file is up to date.")
+        print("No differences found.")
+        print("Hosts file is up to date.")
 
-    if removed_lines:
-        logging.info(f"{len(removed_lines)} lines removed from hosts file.")
-
-    return added_count, len(removed_lines)
-
-def run_once():
-    added_count, removed_count = check_and_update_hosts()
-    print("========================================")
-    print(f"Update is finished.\n{added_count} lines added.\n{removed_count} lines removed.\nPress any key to exit.")
-    input()
+    input("Press any key to exit...")
 
 if __name__ == "__main__":
-    run_once()
+    main()
