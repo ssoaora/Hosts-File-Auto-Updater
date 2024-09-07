@@ -21,11 +21,12 @@ This tool is ideal for users looking to automate the management of their hosts f
 
 ## Configuration
 
-The script can be configured editing functions. This file contains the following fields:
+The script can be configured editing following functions:
 
 - `URL`: The URL from which the hosts list will be fetched.
 - `HOSTS_PATH`: The path to the local hosts file on the system.
 
 ## Contributions
 
-Contributions are welcome! For feature requests, bug reports or submitting pull requests, please use the issue tracker
+Contributions are welcome!  
+For feature requests, bug reports or submitting pull requests, please use the issue tracker
