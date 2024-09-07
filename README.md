@@ -11,26 +11,20 @@ This tool is ideal for users looking to automate the management of their hosts f
 
 - Python libraries: `requests`
 
-## Installation
+## Usage
 
 1. Clone the repository to your local machine.
 2. Install the required dependencies using `pip install -r requirements.txt`.
-3. Run the script using `update.bat` or type `python hosts_updater.py` on terminal (Note: Administrator privileges are required).
+3. Update the `main.py` file with the appropriate values.
+4. Run the script using `update.bat` or type `python main.py` on terminal (Note: Administrator privileges are required).
+5. The script will fetch the hosts list from the remote URL and update the local hosts file.
 
 ## Configuration
 
-The script can be configured using the `config.json` file. This file contains the following fields:
+The script can be configured editing functions. This file contains the following fields:
 
-- `hosts_url`: The URL from which the hosts list will be fetched.
-- `hosts_path`: The path to the local hosts file on the system.
-- `update_interval`: The frequency at which the hosts file will be updated (in seconds).
-- `log_path`: The path to the log file where update history and errors will be recorded.
-
-## Usage
-
-1. Update the `config.json` file with the appropriate values.
-2. Run the script using `python main.py`.
-3. The script will periodically fetch the hosts list from the remote URL and update the local hosts file.
+- `URL`: The URL from which the hosts list will be fetched.
+- `HOSTS_PATH`: The path to the local hosts file on the system.
 
 ## Contributions
 
