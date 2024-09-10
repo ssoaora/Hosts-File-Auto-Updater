@@ -21,7 +21,7 @@ This tool is ideal for users looking to automate the management of their hosts f
 
 ## Configuration
 
-The script can be configured editing following functions:
+The script can be configured editing following variables:
 
 - `URL`: The URL from which the hosts list will be fetched.
 - `HOSTS_PATH`: The path to the local hosts file on the system.
